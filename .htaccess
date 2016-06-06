@@ -2,6 +2,8 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+# Service Home
+# RewriteRule api/sentiment/?$ index.php [NC,L]
 # Sentiment Analysis
-RewriteRule api/sentiment/(.*)$ sentiment.php?request=$1 [QSA,NC,L]
+RewriteRule api/sentiment/?(.*)$ sentiment.php?request=$1 [QSA,NC,L]
 </IfModule>
