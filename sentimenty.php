@@ -17,14 +17,11 @@ if($param == ''){
 
 	try {
     	$s = new Sentimenty($_REQUEST['request'],$_SERVER['HTTP_ORIGIN']);
-    	//echo $s->processAPI();
+    	echo $s->processAPI();
 	} catch (Exception $e) {
 	    echo json_encode(Array('error' => $e->getMessage()));
 	}
 }
-
-
-
 
 
 // /**
