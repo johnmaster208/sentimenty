@@ -51,6 +51,14 @@ class Sentimenty extends Service {
 	            return "Only accepts GET requests";
 	        }
 	     }
+
+	     protected function gnight() {
+	     	if($this->method == 'GET') {
+	     		return "This message was built by John's sentiment web service! Gnight!";
+	     	} else {
+	     		return "Only accepts GET requests";
+	     	}
+	     }
 }
 
 ?>
