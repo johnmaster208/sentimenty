@@ -1,14 +1,21 @@
 <?php
 
-require_once('includes/class.sentiment.inc');
+require_once('includes/class.sentimenty.inc');
 
 $param = isset($_GET['request']) ? $_GET['request'] : '';
 
 if($param == ''){
 	echo 'No request found. Please read the docs and try again.';
 } else {
-	echo "<h1>The request was: </h1>";
-	echo "<pre><h3>$param</h3></pre>";
+	// echo "<h1>The request was: </h1>";
+	// echo "<pre><h3>$param</h3></pre>";
+
+	try {
+    	$s = new Sentimenty($_REQUEST['request'],$_SERVER['HTTP_ORIGIN']);
+    	//echo $s->processAPI();
+	} catch (Exception $e) {
+	    echo json_encode(Array('error' => $e->getMessage()));
+	}
 }
 
 

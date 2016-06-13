@@ -1,7 +1,7 @@
 <?php
 
 abstract class Service {
-	/**
+    /**
      * Property: method
      * The HTTP method this request was made in, either GET, POST, PUT or DELETE
      */
@@ -28,10 +28,10 @@ abstract class Service {
      * Property: file
      * Stores the input of the PUT request
      */
-     protected $file = Null;
+    protected $file = Null;
 
 
- 	public function processAPI() {
+    public function processAPI() {
         if (method_exists($this, $this->endpoint)) {
             return $this->_response($this->{$this->endpoint}($this->args));
         }
@@ -93,20 +93,20 @@ abstract class Service {
         }
 
         switch($this->method) {
-	        case 'DELETE':
-	        case 'POST':
-	            $this->request = $this->_cleanInputs($_POST);
-	            break;
-	        case 'GET':
-	            $this->request = $this->_cleanInputs($_GET);
-	            break;
-	        case 'PUT':
-	            $this->request = $this->_cleanInputs($_GET);
-	            $this->file = file_get_contents("php://input");
-	            break;
-	        default:
-	            $this->_response('Invalid Method', 405);
-	            break;
+            case 'DELETE':
+            case 'POST':
+                $this->request = $this->_cleanInputs($_POST);
+                break;
+            case 'GET':
+                $this->request = $this->_cleanInputs($_GET);
+                break;
+            case 'PUT':
+                $this->request = $this->_cleanInputs($_GET);
+                $this->file = file_get_contents("php://input");
+                break;
+            default:
+                $this->_response('Invalid Method', 405);
+                break;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 require_once('class.service.inc');
 
-class Sentiment extends Service {
+class Sentimenty extends Service {
  	// 	protected $User;
 
 		// public function __construct($request, $origin) {
@@ -37,8 +37,20 @@ class Sentiment extends Service {
 	     // }
 
 	    public function __construct($request,$origin){
+	    // public function __construct($request){
 	    	parent::__construct($request);
 	    }
+
+	    /**
+	     * Example of an Endpoint
+	     */
+	     protected function name() {
+	        if ($this->method == 'GET') {
+	        	return "Your name is " . $this->args[0];
+	        } else {
+	            return "Only accepts GET requests";
+	        }
+	     }
 }
 
 ?>
