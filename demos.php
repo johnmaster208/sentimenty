@@ -9,7 +9,7 @@
 		    <div id="cta" class="jumbotron">
 			    <h1 class="text-primary">Sentimenty: Demos</h1>
 		    </div>
-			<h2>Textpot Demo</h2>
+			<h2>Textpool Demo</h2>
 			<div class="well well-lg">
 				<form role="form" action="" class="form-horizontal">
 					<div class="form-group pull-right">
@@ -17,11 +17,11 @@
 					<button class="btn btn-success btn-sm">Generate It!</button>
 					</div>
 					<div class="form-group">
-					<label for="textpot-narrative">Paste your text here:</label>
-					<textarea name="textpot-narrative" class="form-control" rows="5" placeholder="Enter text. 5000 character maximum."></textarea>
+					<label for="textpool-narrative">Paste your text here:</label>
+					<textarea name="textpool-narrative" class="form-control" rows="5" placeholder="Enter text. 5000 character maximum."></textarea>
 					</div>
 					<div class="form-group">
-					<button id="textpot-submit" type="submit" class="btn btn-primary btn-lg">Submit</button>
+					<button id="textpool-submit" type="submit" class="btn btn-primary btn-lg">Submit</button>
 					</div>
 					
 				</form>
@@ -33,5 +33,7 @@
 			    </button>
 		    </a>
 		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+	    <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	</body>
 </html>

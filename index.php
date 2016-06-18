@@ -22,10 +22,10 @@
 		    <h2>How does it work?</h2>
 		     <p>Through generic POST requests to the following endpoint(s):</p>
 		    <div class="well well-lg">
-		      <h4>Textpot</h4>
-		      <p class="text-muted">textpot returns the emotional significance (or "e-sig" for short) of the text, broken into a distribution and ranked by an index.</p>
+		      <h4>Textpool</h4>
+		      <p class="text-muted">textpool returns the emotional significance (or "e-sig" for short) of the text, broken into a distribution and ranked by an index.</p>
 		      <h5>Usage</h5>
-		      <code class="lead">/api/textpot/[text]</code>
+		      <code class="lead">/s/textpool/[text]</code>
 		    </div>
 		    <div class="well well-lg">
 		      <h4>Textprobe</h4>
@@ -33,6 +33,11 @@
 		    </div>
 		    <div class="well well-lg">
 		      <h4>Textpluck</h4>
+		      <h5>COMING SOON!</h5>
+		    </div>
+
+		    <div class="well well-lg">
+		      <h4>Textplot</h4>
 		      <h5>COMING SOON!</h5>
 		    </div>
 	  
@@ -52,6 +57,7 @@
 		      </p>
 		    </div>
 	    </div>
+	    <script type="text/javascript" src="js/jquery.min.js"></script>
 	    <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	</body>
 </html>
