@@ -5,15 +5,17 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # Sentiment Analysis
-RewriteRule api/sentimenty/?(.*)$ sentimenty.php?request=$1 [QSA,NC,L]
+RewriteRule s/sentimenty/?(.*)$ sentimenty.php?request=$1 [QSA,NC,L]
 
-# Textpot is for the sentimental distribution
-RewriteRule api/textpot/?(.*)$ textpot.php?q=$1 [QSA,NC,L]
+# Textpool is for the sentimental distribution
+RewriteRule s/textpot/?(.*)$ textpot.php?q=$1 [QSA,NC,L]
 
 # Textprobe is for spidering a website and learning the esig (emotional significance)
-RewriteRule api/textprobe/?(.*)$ textprobe.php?q=$1 [QSA,NC,L]
+RewriteRule s/textprobe/?(.*)$ textprobe.php?q=$1 [QSA,NC,L]
 
 # Textpluck is for txt files and pdf files\
+
+# Textplot draws charts on your text!
 
 # Demos Page
 
