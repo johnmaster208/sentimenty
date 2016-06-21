@@ -6,7 +6,7 @@
 			e.preventDefault();
 			var $form = $(this).closest('form');
 			var $textArea = $form.find('textarea#textpool-narrative');
-			var msg = "Sometime during the winter, little ducklings leave their mother in search of food. Without a doubt, the duckling's prominent predator is probably the viscious honey badger; He's very mean, and well, he just doesn't care.";
+			var msg = "Sometime during the winter, little ducklings leave their mother in search of food. Without a doubt, the duckling's prominent predator is probably the vicious honey badger; He's very mean, and well, he just doesn't care.";
 			$textArea.val(msg);
 			return false;
 		});
