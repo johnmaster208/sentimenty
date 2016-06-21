@@ -18,6 +18,12 @@ class Sentimenty extends Service {
 	     	}
      	}
 
+     	protected function demos() {
+     		if($this->method == 'GET') {
+     			include('demos.php');
+     		}
+     	}
+
 	     protected function textpool() {
 	     	if($this->method == 'POST') {
 	     		if (isset($_POST['textpool']) && $_POST['textpool'] != '') {
@@ -30,6 +36,22 @@ class Sentimenty extends Service {
 	     	} else {
 	     		return "This endpoint only accepts POST data.";
 	     	}
+	     }
+
+	     protected function textprobe() {
+
+	     }
+
+	     protected function textpluck() {
+
+	     }
+
+	     protected function textplot() {
+
+	     }
+
+	     protected function textprod() {
+	     	
 	     }
 
 }
