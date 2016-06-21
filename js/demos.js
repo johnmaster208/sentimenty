@@ -6,9 +6,9 @@
 			e.preventDefault();
 			var $form = $(this).closest('form');
 			var $textArea = $form.find('textarea#textpool-narrative');
-			var msg = "Sometime during the winter, little ducklings leave their mother in search of food. The other wild animals in their immediate ecosystem will benefit from the duckling";
+			var msg = "Sometime during the winter, little ducklings leave their mother in search of food. Without a doubt, the duckling's prominent predator is probably the viscious honey badger; He's very mean, and well, he just doesn't care.";
 			$textArea.val(msg);
-			console.log($textArea.val());
+			return false;
 		});
 
 		$('form#textpool-form-submit').submit(function(e) {
@@ -18,6 +18,9 @@
 				'url': '/s/textpool',
 				'type': 'POST',
 				'data': formData,
+				'beforeSend': function(){
+
+				},
 				'success': function(data) {
 
 				}
