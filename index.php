@@ -1,18 +1,16 @@
-<?php
-?>
+<?php ?>
 <html>
-<head>
-	<title>Sentimenty</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-</head>
+	<head>
+		<title>Sentimenty</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+	</head>
   	<body>
 	    <div class="container-fluid">
 		    <div id="cta" class="jumbotron">
 			    <h1 class="text-primary">Sentimenty</h1>
 			    <h4 class="text-muted">learning the emotional web</h4>
 		    </div>
-		    
 		    <h2>What is it?</h2>
 		    <div class="well well-lg">
 		      <p>
@@ -41,6 +39,11 @@
 		      <h4>Textplot</h4>
 		      <h5>COMING SOON!</h5>
 		    </div>
+
+		    <div class="well well-lg">
+		      <h4>Textprod</h4>
+		      <h5>COMING SOON!</h5>
+		    </div>
 	  
 	      	<h2>Why did you name it Sentimenty?</h2>
 		    <div class="well">
@@ -60,5 +63,6 @@
 	    </div>
 	    <script type="text/javascript" src="js/jquery.min.js"></script>
 	    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	    <script type="text/javascript" src="js/demos.js"></script>
 	</body>
 </html>
