@@ -1,21 +1,30 @@
 <IfModule mod_rewrite.c>
 
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*)$ $1 [NC,L]
 
 # Sentiment Analysis
-RewriteRule s/sentimenty/?(.*)$ sentimenty.php?request=$1 [QSA,NC,L]
-
+RewriteRule s/?(.*)$ sentimenty.php?q=$1 [QSA,NC,L]
 # Textpool is for the sentimental distribution
-RewriteRule s/textpot/?(.*)$ textpot.php?q=$1 [QSA,NC,L]
+RewriteRule s/textpool/?(.*)$ textpool.php?q=$1 [QSA,NC,L]
 
 # Textprobe is for spidering a website and learning the esig (emotional significance)
-RewriteRule s/textprobe/?(.*)$ textprobe.php?q=$1 [QSA,NC,L]
+# RewriteRule s/textprobe/?(.*)$ textprobe.php?q=$1 [QSA,NC,L]
 
-# Textpluck is for txt files and pdf files\
+# Textpluck is for extracting text out of things, like document files or PDFs
+# Textpeek? 
 
-# Textplot draws charts on your text!
+# Textplot builds visualizations with your text
+
+# Textprod is for executing business logic on text patterns
+
+# I.e. if the text is happy, then send a congenial response
+# if the text is sad, send a condolence letter.
+
+
 
 # Demos Page
 
