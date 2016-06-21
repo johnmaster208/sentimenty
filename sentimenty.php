@@ -2,21 +2,17 @@
 
 require_once('includes/class.sentimenty.inc');
 
-$param = isset($_GET['request']) ? $_GET['request'] : '';
+$param = isset($_GET['q']) ? $_GET['q'] : '';
 
 if($param == ''){
 	echo 'No request found. Please read the docs and try again.';
 } else {
-	// echo "<h1>The request was: </h1>";
-	// echo "<pre><h3>$param</h3></pre>";
-
 	// Requests from the same server don't have a HTTP_ORIGIN header
 	if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 	    $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
 	}
-
 	try {
-    	$s = new Sentimenty($_REQUEST['request'],$_SERVER['HTTP_ORIGIN']);
+    	$s = new Sentimenty($param,$_SERVER['HTTP_ORIGIN']);
     	echo $s->processAPI();
 	} catch (Exception $e) {
 	    echo json_encode(Array('error' => $e->getMessage()));
