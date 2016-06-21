@@ -1,6 +1,7 @@
 <?php
 
 require_once('class.service.inc');
+require_once('class.textpool.inc');
 
 class Sentimenty extends Service {
 
@@ -17,16 +18,19 @@ class Sentimenty extends Service {
 	     	}
      	}
 
-	     protected function  analyze() {
-	     	if($this->method == 'POST'){
-	     		echo "<h2>The endpoint is " . $this->endpoint . "</h2>";
-	     		echo "<h3>The verb is " . $this->verb . "</h3>";
-	     		echo "<h4>The args are " . print_r($this->args,true).'</h4>';  
+	     protected function textpool() {
+	     	if($this->method == 'POST') {
+	     		if (isset($_POST['textpool']) && $_POST['textpool'] != '') {
+	     			$t = $_POST['textpool'];
+	     			$textPool = new TextPool($t);
+	     			return $textPool->output;
+	     		} else {
+	     			return 'No text was sent. Please try again.';
+	     		}
 	     	} else {
-	     		return "No POST request sent.";
+	     		return "This endpoint only accepts POST data.";
 	     	}
 	     }
-
 
 }
 
