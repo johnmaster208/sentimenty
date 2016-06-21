@@ -1,34 +1,15 @@
 <IfModule mod_rewrite.c>
 
 RewriteEngine On
+# Set basic conditions
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
 
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^(.*)$ $1 [NC,L]
+# For Demos: clean URLs when requesting a demo
+RewriteRule ^demo/?(.*)/?$ demos.php?d=$1 [QSA,NC,L]
 
-# Sentiment Analysis
-RewriteRule s/?(.*)$ sentimenty.php?q=$1 [QSA,NC,L]
-# Textpool is for the sentimental distribution
-RewriteRule s/textpool/?(.*)$ textpool.php?q=$1 [QSA,NC,L]
-
-# Textprobe is for spidering a website and learning the esig (emotional significance)
-# RewriteRule s/textprobe/?(.*)$ textprobe.php?q=$1 [QSA,NC,L]
-
-# Textpluck is for extracting text out of things, like document files or PDFs
-# Textpeek? 
-
-# Textplot builds visualizations with your text
-
-# Textprod is for executing business logic on text patterns
-
-# I.e. if the text is happy, then send a congenial response
-# if the text is sad, send a condolence letter.
-
-
-
-# Demos Page
-
-RewriteRule demos(.*)$ demos.php?r=$1 [QSA,NC,L]
-
+# For API calls use the atomic rewrite for q=$1/$2
+# $1 = Endpoint; $2 = Data being sent
+RewriteRule ^s/(.*)/?(.*)$ sentimenty.php?q=$1/$2 [QSA,NC,L]
 
 </IfModule>
