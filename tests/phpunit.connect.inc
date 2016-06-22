@@ -2,7 +2,7 @@
 
 require_once('test.connect.inc');
 
-class Connect extends PHPUnit_Framework_TestCase {
+class RemoteConnect extends PHPUnit_Framework_TestCase {
 
 	public function setUp(){}
 
