@@ -1,11 +1,8 @@
 <phpunit backupGlobals="true">
-	<filter>
-		<whitelist>
-			<directory>/</directory>
-		</whitelist>
-	</filter>
-	<testsuite name="connect">
-		<file>tests/test.connect.inc</file>
-		<directory>tests</directory>
-	</testsuite>
+	<testsuites>
+		<testsuite name="connect">
+			<file>tests/phpunit.connect.inc</file>
+			<directory>tests</directory>
+		</testsuite>
+	</testsuites>
 </phpunit>
