@@ -1,12 +1,8 @@
 <?php
 
-
 class Connect {
-
 		private $serverName = '';
-
 		public function connectToServer($server=null) {
-
 			if($server == null) {
 				throw new Exception("Server was not found.");
 			}
@@ -20,7 +16,7 @@ class Connect {
 }
 
 
-class RemoteConnect extends PHPUnit_Framework_TestCase {
+class ConnectTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp(){}
 

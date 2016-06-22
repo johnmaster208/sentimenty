@@ -1,7 +1,7 @@
 <phpunit backupGlobals="true">
 	<testsuites>
 		<testsuite name="connect">
-			<file>tests/phpunit.connect.inc</file>
+			<file>tests/ConnectTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
