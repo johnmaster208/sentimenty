@@ -2,7 +2,6 @@
 	<testsuites>
 		<testsuite name="connect">
 			<file>tests/phpunit.connect.inc</file>
-			<directory>tests</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
