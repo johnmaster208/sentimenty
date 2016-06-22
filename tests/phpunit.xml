@@ -4,7 +4,8 @@
 			<directory>/</directory>
 		</whitelist>
 	</filter>
-	<testsuite>
-		<directory>./</directory>
+	<testsuite name="connect">
+		<file>tests/test.connect.inc</file>
+		<directory>tests</directory>
 	</testsuite>
 </phpunit>
