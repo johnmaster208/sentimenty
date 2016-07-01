@@ -6,34 +6,44 @@
 		<title>Demo: <?php echo strtoupper($demo)?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/fontawesome.min.css" type="text/css">
 	</head>
   	<body>
 	    <div class="container-fluid">
-		    <div id="cta" class="jumbotron">
+		    <div id="cta" class="jumbotron col-xs-12 col-sm-12 ">
 			    <h1 class="text-primary">Demo: <?php echo strtoupper($demo) ?> </h1>
 		    </div>
-
 			<?php if($demo == 'textpool') { ?>
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="well well-lg">
+				<div class="panel panel-default col-xs-12 col-sm-9 col-md-9 col-lg-9 center-block">
+					<div id="textpool-panel" class="">
+						<div class="panel-body">
 							<form id="textpool-form-submit" role="form" class="form-horizontal">
-								<div class="form-group row">
-									<div class="col-md-10">
-										<label for="textpool-narrative">
-											<small class="text-muted">Instructions: Paste some text in the textarea and click the submit button.</small>
+								<div class="form-group">
+									<div class="col-xs-12 col-sm-9 col-md-8">
+										<label for="textpool-narrative" class="">
+										<span class="lead text-muted">Instructions: Paste some text in the textarea and click the submit button.</span>
 										</label>
 									</div>
-									<div class="col-md-2">
-										<small class="text-muted"><em>Don't have any text?</em></small>
-										<button id="textpool-generate" class="btn btn-success btn-sm">Generate It!</button>
+									<div class="col-xs-12 col-sm-3 col-md-4">
+										<h3 class="text-info">OR <button id="textpool-generate" class="btn btn-success btn-sm text-uppercase">Generate Text</button></h3>
 									</div>
 								</div>
 								<div class="form-group">
-									<textarea id="textpool-narrative" name="textpool" class="form-control" rows="5" placeholder="Enter text. 5000 character maximum."></textarea>
+									<textarea id="textpool-narrative" name="text" class="form-control" rows="5" placeholder="Enter text. 5000 character maximum."></textarea>
+								</div>
+								<div class="form-group form-inline">
+									<p class="lead">Pick your response format:</p>
+									<div class="well well-lg lead">
+										<label for="textpool-format-json">
+											<input id="textpool-format-json" class="radio form-control" name="format" type="radio" value="json" checked> JSON
+										</label>
+										<label for="textpool-format-xml">
+											<input id="textpool-format-xml" class="radio form-control" name="format" type="radio" value="xml"> XML
+										</label>
+									</div>
 								</div>
 								<div class="form-group">
-								<button id="textpool-submit" type="submit" class="btn btn-primary btn-sm">Submit</button>
+								<button id="textpool-submit" type="submit" class="btn btn-danger btn-lg">Submit</button>
 								</div>
 							</form>
 						</div>
@@ -52,15 +62,19 @@
 					</div>
 				</div>
 			<?php } ?>
-		    <a href="/">
-			    <button class="btn btn-primary">
-				    <i class="glyphicon glyphicon-menu-left"></i>
-				    Back to home
-			    </button>
-		    </a>
+			<div class="navigation col-xs-12 col-sm-12 col-md-9 col-lg-12">
+				<a href="/">
+				    <button class="btn btn-default btn-lg">
+					    <i class="glyphicon glyphicon-menu-left"></i>
+					    Back to home
+				    </button>
+			    </a>
+			</div>
+		    
 		</div>
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
 	    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	    <script type="text/javascript" src="/js/highcharts.min.js"></script>
 	    <script type="text/javascript" src="/js/demos.js"></script>
 	</body>
 </html>
