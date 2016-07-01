@@ -1,79 +1,68 @@
 <?php
 
-class TextPool {
+require_once('class.nlp.inc');
 
-	//raw holds the entire request string
-	private $request = '';
-	//segments contains the string broken into array elements
-	private $segments = array();
-	//output is the array with all the sentiment data attached to it
-	public $output = array();
+class TextPool extends NLP {
 
-	private function wordCount($key) {
-		$count = array();
-		foreach($this->segments as $v) {
-			if(!array_key_exists($v,$count)) {
-				$count[$v] = 0;
-			} 
-			$count[$v]++;
-		}
-		return $count[$key];
-	}
+	/**
+	*Based on Robert Plutchik's Wheels of emotions.
+	*
+	*This says that the eight basic emotions (feelings) are:
+	*
+	*Fear → feeling afraid. Other words are terror (strong fear), shock, phobia
+	*Anger → feeling angry. A stronger word is rage.
+	*Sadness → feeling sad. Other words are sorrow, grief (a stronger feeling, for example when someone has died) or depression
+	*Joy → feeling happy. Other words are happiness, gladness.
+	*Disgust → feeling something is wrong or dirty
+	*Trust → a positive emotion; admiration is stronger; acceptance is weaker
+	*Anticipation → in the sense of looking forward positively to something which is going to happen. Expectation is more neutral.
+	*Surprise → how one feels when something unexpected happens​
+	**/
 
-	private function determineLangageElement($key) {
-		$elems = array();
-		//need something here that will go and look up the parts of speech
-		$eng_articles = array('the','a','an');
-		$eng_expletives = array('fuck','bitch','damnit','ass','shit','piss','bastard');
-		foreach($this->segments as $v) {
-			if(!array_key_exists($v,$elems)) {
-				if(in_array($v,$eng_articles)) {
-					$elems[$v] = 'article';
-				} elseif (in_array($v, $eng_expletives)) {
-					$elems[$v] = 'expletive';
-				}
-				 else {
-					$elems[$v] = 'Not determinable';
-				}		
-			}//end if
-
-		}//end foreach segment
-		if(isset($elems[$key])){
-			return $elems[$key];
-		}
+	private function _gatherFear(){
 		
 	}
 
-	protected function analyzeWordSequence($request) {
-		// echo '<pre>Chopped:'.print_r($chopped[1],true).'</pre>';
-		$toSegmentArray = explode(' ',$this->request);
-		$this->segments = $toSegmentArray;
+	private function _gatherAnger(){
+
 	}
 
+	private function _gatherSadness(){
 
-	protected function fillPool() {
-		$poolArray = array();
-		foreach($this->segments as $key => $value) {
-			$poolArray[$key] = array(
-				'word' => $value, 
-				'count' => $this->wordCount($value), 
-				'postition' => $key, 
-				'type' => $this->determineLangageElement($value)
-			);
+	}
+
+	private function _gatherJoy(){
+
+	}
+
+	private function _gatherDisgust(){
+
+	}
+
+	private function _gatherTrust(){
+
+	}
+
+	private function _gatherAnticipation(){
+
+	}
+
+	private function _gatherSurprise(){
+
+	}
+
+	private function _poolSentiment($textObj) {
+		foreach($textObj as $obj){
+
 		}
-		$this->output = $poolArray;
 	}
-
-	public function __construct($t){
-		//echo '<pre>'.print_r($t,true).'</pre>';
-		$this->request = $t;
-		// $this->raw = $this->request;
-		$this->analyzeWordSequence($this->request);
-		//$this->fillPool();
-		//echo '<pre>Segments:'.print_r($this->segments,true).'</pre>';
-		$this->fillPool();
-		//echo '<pre>Output:'.print_r($this->output,true).'</pre>';
-		//echo $this->fetchOutput();
+	public function __construct($text){
+		//build the object from the inherited NLP class
+		$obj = parent::__construct($text);
+		//echo '<pre>'.print_r($obj,true).'</pre>';
+		//$textpool = $obj->getSegmentData();
+		//echo '<pre>'.print_r($data,true).'</pre>';
+		return $obj;
 	}
 }
 
