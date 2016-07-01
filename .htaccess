@@ -5,7 +5,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
-# For Demos: clean URLs when requesting a demo
+# For Demos: clean URLs
 RewriteRule ^demo/?(.*)/?$ demos.php?d=$1 [QSA,NC,L]
 
 # For API calls use the atomic rewrite for q=$1/$2
