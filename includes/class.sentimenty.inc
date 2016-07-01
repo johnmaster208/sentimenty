@@ -18,6 +18,20 @@ class Sentimenty extends Service {
 	     	}
      	}
 
+     	protected function paramtest(){
+     		if($this->method == 'GET') {
+     			echo '<pre>'.print_r($this,true)."</pre>";
+	     	} elseif ($this->method == 'POST') {
+	     		echo "<h1>Oh boy, a POST request!!! *SQUEE*</h1>";
+	     		echo "Looks like here's the parameters you sent us:";
+	     		foreach($_POST as $key => $value) {
+	     			echo "<p>key: ".$key." => value: ".$value." </p>";
+	     		}
+	     		echo "<h2>This information was derived from the request object</h2>";
+	     		echo '<pre>'.print_r($this,true)."</pre>";
+	     	}
+     	}
+
      	protected function demos() {
      		if($this->method == 'GET') {
      			include('demos.php');
@@ -26,10 +40,19 @@ class Sentimenty extends Service {
 
 	     protected function textpool() {
 	     	if($this->method == 'POST') {
-	     		if (isset($_POST['textpool']) && $_POST['textpool'] != '') {
-	     			$t = $_POST['textpool'];
-	     			$textPool = new TextPool($t);
-	     			return $textPool->output;
+	     		$text = isset($this->request['text']) ? $this->request['text'] : null;
+	     		$format = isset($this->request['format']) ? $this->request['format'] : 'json';
+	     		if($text){
+	     			$tp = new TextPool($text);
+	     			//echo '<pre>'.print_r($this,true).'</pre>';
+	     			$data = $tp->getSegmentData();
+	     			//var_dump($data);
+	     			//exit();
+	     			//"sleep" so it looks like we're thinking :)
+	     			sleep(rand(2,4));
+	     			//print $textPool;
+	     			//echo '<pre>'.print_r($data,true).'</pre>';
+	     			return $data;
 	     		} else {
 	     			return 'No text was sent. Please try again.';
 	     		}
