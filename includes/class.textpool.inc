@@ -19,50 +19,150 @@ class TextPool extends NLP {
 	*Surprise → how one feels when something unexpected happens​
 	**/
 
+	//Properties
+	// the $segment is the array item we're testing
+	private $segment;
+	// textpool: the working array which gets populated with sentiment info
+	protected $textpool = array();
+
+	// Utility functions
+	//setSegment: sets the current segment to the class segment
+	private function _setSegment($segment) {
+		$this->segment = $segment;
+	}
+	//getSegment: returns the active class segment
+	private function _getSegment() {
+		return $this->segment;
+	}
+
+	//word stems; ive, ing, y, ful, er, est, ed, able
+
 	private function _gatherFear(){
-		
-	}
-
-	private function _gatherAnger(){
-
-	}
-
-	private function _gatherSadness(){
-
-	}
-
-	private function _gatherJoy(){
-
-	}
-
-	private function _gatherDisgust(){
-
-	}
-
-	private function _gatherTrust(){
-
-	}
-
-	private function _gatherAnticipation(){
-
-	}
-
-	private function _gatherSurprise(){
-
-	}
-
-	private function _poolSentiment($textObj) {
-		foreach($textObj as $obj){
-
+		$fear = array('afraid','acrophobic','afeard','aghast','appalled','dismayed','shocked','agoraphobic','alarmed','algophobic','apprehensive','browbeaten','bullied','cowed','hangdog','intimidated','claustrophobic','fearful','frightened','scared','horrified','horror-struck','horror-stricken','hunted','hydrophobic','aquaphobic','mysophobic','pankcky','panic-stricken','panic-struck','terrified','frightened','petrified','numb','shitless','terror-struck','terror-stricken','triskaidekaphobic','unnerved','white-lipped','xenophobic','cowardly','fearful','timid');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $fear)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'fear'
+			);
+			array_push($this->textpool,$data);
 		}
 	}
+	private function _gatherAnger(){
+		$anger = array('angry','aggravated','provoked','angered','enraged','furious','infuriated','maddened','choleric','irascible','hot under the colloar','huffy','mad','sore','indignant','incensed','outraged','umbrageous','irate','ireful','livid','smoldering','smouldering','wrath','wrathful','wroth','wrothful','mean','nasty','awful','hate','hatred','rage','raging','fury','vexation','exasperation','displeasure','crossness','displeased','irritate','irritated','irritability','indignation','pique','annoyed','annoyance','aggravate','aggravated','aggravation','umbrage','chafe','chafed','apoplectic','acrimonious','caustic','acerbic','scathing','acid','harsh','sharp','cutting','virulent','spiteful','vicious','hostile','venemous','pernicious','bitchy','nasty','catty');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $anger)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'anger'
+			);
+			array_push($this->textpool,$data);
+		}
+	}
+	private function _gatherJoy(){
+		$joy = array('joy','joyous','joyful','ecstatic','rapture','rapturous','rapt','rhapsody','rhapsodic','elated','glee','gleeful','jubilant','jubilee','gay','festal','festive','merry','jocund','jolly','jovial','mirthful','happy');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $joy)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'joy'
+			);
+			array_push($this->textpool,$data);
+		}
+	}
+	private function _gatherDisgust(){
+		$disgust = array('disgusting','offensive','abhorrent','detestable','obscene','repugnant','replusive','charnel','ghastly','sepulchral','creepy','disgustful','distasteful','foul','loathly','loathsome','repellant','repelling','revolting','shanky','wicked','yucky','ghoulish','morbid','hideous','horrific','outrageous','objectionable','obnoxious','rank','scrimy','verminous','evil','hateful','unpalatable','unpleasant');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $disgust)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'disgust'
+			);
+			array_push($this->textpool,$data);
+		}
+	}
+	private function _gatherTrust(){
+		$trust = array('trust','trustful','trusting','trustworthy','confide','confiding','confided','unsuspect','unsuspected','unsuspecting','credulous','trusty','authentic','authenticate','authenticated','reliable','reliability','credit','creditworthy','creditable','responsible','responsibility','dependable','honest','truthful','truth','true','honesty','fiducal','sure','more sure','surest','trusted','faithful','faith','honorable','pride','proud','prominent','celebrated','famous','illustrious','renowned','famed','leading','eminent','distinguished','notable','noted','noteworthy','influential','affluential','affluent','important','know','known','knowing','reputable','respected','established','respect','establish','prestigious');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $trust)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'trust'
+			);
+			array_push($this->textpool,$data);
+		}	
+	}
+	private function _gatherAnticipation(){
+		$anticipation = array('assume','assuming','assumed','await','wait','waiting','awaiting','forecast','forecasted','forsee','prepare','preparing','prepared','divine','expect','expected','expecting','expectancy','predict','predicting','predicted','prevision','figure','figured','prognosticate','prophesy','visualize','visualizing','apprehend','apprehension','apprehensive','joy','hope','prospect');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $anticipation)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'anticipation'
+			);
+			array_push($this->textpool,$data);
+		}
+	}
+	private function _gatherSurprise(){
+		$surprise = array('surprise','surprised','surprising','amaze','amazed','amazing','astonied','astonish','astonishment','astounding','astounded','awing','impressive','stun','stunned','stunning','dumbfounded','dumbfound','flabbergast','flabbergasted','stagger','staggered','staggering','stupify','stupified','thunderstruck','dumbstruck','dumbstricken','gobsmacked','openmouthed','popeyed','jiggered','startle','startled','unbelievable','astounding','fabulous','improbable','marvelous','marvel','marveling','marvellous','tall','undreamed','undreamt','unimagined','unimaginable','implausible','incredulous','unconvincing','unthinkable');
+		$s = $this->_getSegment();
+		if(in_array($s['word'], $surprise)) {
+			$data = array(
+				'word' => $s['word'],
+				'count' => $s['count'],
+				'position' => $s['position'],
+				'part' => $s['type'],
+				'sentiment' => 'surprise'
+			);
+			array_push($this->textpool,$data);
+		}
+	}
+
+	//handles the merging of the sentimentData array
+	private function _poolSentimentData() {
+		foreach($this->segmentData as $segment){
+			$this->_setSegment($segment);
+			$this->_gatherFear();
+			$this->_gatherAnger();
+			$this->_gatherJoy();
+			$this->_gatherDisgust();
+			$this->_gatherTrust();
+			$this->_gatherAnticipation();
+			$this->_gatherSurprise();
+		}
+	}
+
+
 	public function __construct($text){
 		//build the object from the inherited NLP class
-		$obj = parent::__construct($text);
+		parent::__construct($text);
+		$this->_poolSentimentData();
 		//echo '<pre>'.print_r($obj,true).'</pre>';
 		//$textpool = $obj->getSegmentData();
 		//echo '<pre>'.print_r($data,true).'</pre>';
-		return $obj;
+		return $this;
+	}
+
+	public function dumpPool(){
+		return $this->textpool;
 	}
 }
 

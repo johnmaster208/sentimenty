@@ -45,8 +45,7 @@ class Sentimenty extends Service {
 	     		if($text){
 	     			$tp = new TextPool($text);
 	     			//echo '<pre>'.print_r($this,true).'</pre>';
-	     			$data = $tp->getSegmentData();
-	     			//var_dump($data);
+	     			$data = $tp->dumpPool();
 	     			//exit();
 	     			//"sleep" so it looks like we're thinking :)
 	     			sleep(rand(2,4));
