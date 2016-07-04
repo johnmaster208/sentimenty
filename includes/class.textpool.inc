@@ -25,6 +25,7 @@ class TextPool extends NLP {
 	// textpool: the working array which gets populated with sentiment info
 	protected $textpool = array();
 
+
 	// Utility functions
 	//setSegment: sets the current segment to the class segment
 	private function _setSegment($segment) {
@@ -66,7 +67,7 @@ class TextPool extends NLP {
 		}
 	}
 	private function _gatherJoy(){
-		$joy = array('joy','joyous','joyful','ecstatic','rapture','rapturous','rapt','rhapsody','rhapsodic','elated','glee','gleeful','jubilant','jubilee','gay','festal','festive','merry','jocund','jolly','jovial','mirthful','happy');
+		$joy = array('joy','cheerful','sunny','joyous','joyful','ecstatic','rapture','rapturous','rapt','rhapsody','rhapsodic','elated','glee','gleeful','jubilant','jubilee','gay','festal','festive','merry','jocund','jolly','jovial','mirthful','happy','bubbly','genial','upbeat','euphoric','blissful','pleasing','good','welcome','heartwarming','peppy','chirpy','chipper','ebullient','smiley','bouncy','vivacious','sanguine','positive','optimistic','animated','radiant','exuberant','buoyant','breezy','jaunty','affable','perky','blithe','friendly');
 		$s = $this->_getSegment();
 		if(in_array($s['word'], $joy)) {
 			$data = array(
@@ -108,7 +109,7 @@ class TextPool extends NLP {
 		}	
 	}
 	private function _gatherAnticipation(){
-		$anticipation = array('assume','assuming','assumed','await','wait','waiting','awaiting','forecast','forecasted','forsee','prepare','preparing','prepared','divine','expect','expected','expecting','expectancy','predict','predicting','predicted','prevision','figure','figured','prognosticate','prophesy','visualize','visualizing','apprehend','apprehension','apprehensive','joy','hope','prospect');
+		$anticipation = array('assume','assuming','assumed','await','wait','waiting','awaiting','forecast','forecasted','forsee','prepare','preparing','prepared','divine','expect','expected','expecting','expectancy','predict','predicting','predicted','prevision','figure','figured','prognosticate','prophesy','visualize','visualizing','apprehend','apprehension','apprehensive','hope','prospect');
 		$s = $this->_getSegment();
 		if(in_array($s['word'], $anticipation)) {
 			$data = array(
@@ -136,6 +137,39 @@ class TextPool extends NLP {
 		}
 	}
 
+	private function _mergeDuplicateWordsOnPosition(){
+		$uniques = array();
+		$duplicates = array();
+		foreach($this->textpool as $key => $value){
+			//if a word hasn't been identified, push to uniques
+			if(!in_array($value['word'], $uniques)){
+				array_push($uniques,$value['word']);
+			} else {
+				//else, push the word positions for the duplicates to another array
+				array_push($duplicates,$value['position']);
+			}
+		}
+		foreach($this->textpool as $key => $value){
+			//update the unique textpool entry with the duplicate position values.
+			foreach($uniques as $u){
+				if($value['word'] == $u && $value['count'] > 1){
+					$newPosition = $value['position'] . "," . implode(',',$duplicates);
+					unset($this->textpool[$key]['position']);
+					$this->textpool[$key]['position'] = $newPosition;
+				}
+			}
+			//unset the array items where the position is in the dups array
+			foreach($duplicates as $d){
+				if($value['position'] == $d){
+					unset($this->textpool[$key]);
+				}
+			}
+		}
+
+		$this->textpool = array_values($this->textpool);
+		
+	}
+
 	//handles the merging of the sentimentData array
 	private function _poolSentimentData() {
 		foreach($this->segmentData as $segment){
@@ -148,6 +182,37 @@ class TextPool extends NLP {
 			$this->_gatherAnticipation();
 			$this->_gatherSurprise();
 		}
+		
+	}
+
+	private function _calculateSentimentDistribution(){
+		$wordCount = count($this->segmentData);
+		$segmentDistribution = array();
+		//echo 'Total words: '. $wordCount;
+		foreach($this->textpool as $key => $value) {
+			if(array_key_exists($value['sentiment'], $segmentDistribution)) {
+				$segmentDistribution[$value['sentiment']] = $segmentDistribution[$value['sentiment']] + 1;
+			} else {
+				$segmentDistribution[$value['sentiment']] = 1;
+			}	
+		}
+		foreach($segmentDistribution as $k => $v){
+			$segmentDistribution[$k] = $v / $wordCount;
+		}
+		$otherSegments = 100 - array_sum($segmentDistribution);
+		$segmentDistribution['other'] = $otherSegments;
+
+		foreach($this->textpool as $key => $value) {
+			$this->textpool[$key]['distribution'] = $segmentDistribution[$value['sentiment']] / count($segmentDistribution);
+		}
+	}
+
+	private function _calculateSentimentDensity() {
+		$wordCount = count($this->segmentData);
+		//$segmentDensity = array();
+		foreach($this->textpool as $key => $value) {
+			$this->textpool[$key]['density'] = 	$value['count'] / $wordCount;
+		}
 	}
 
 
@@ -155,6 +220,9 @@ class TextPool extends NLP {
 		//build the object from the inherited NLP class
 		parent::__construct($text);
 		$this->_poolSentimentData();
+		$this->_mergeDuplicateWordsOnPosition();
+		$this->_calculateSentimentDistribution();
+		$this->_calculateSentimentDensity();
 		//echo '<pre>'.print_r($obj,true).'</pre>';
 		//$textpool = $obj->getSegmentData();
 		//echo '<pre>'.print_r($data,true).'</pre>';
