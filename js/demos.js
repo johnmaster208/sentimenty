@@ -118,7 +118,7 @@
 		e.preventDefault();
 		var $form = $(this).closest('form');
 		var $textArea = $form.find('textarea#textpool-narrative');
-		var msg = "Sometime during the winter, the frightened little ducklings leave their loving mother in search of food. Without a doubt, the duckling's prominent predator is the vicious honey badger; He's very awful, and well, he just doesn't care.";
+		var msg = "Many babies during the first 3 months of life are happy and care-free. Mothers often accept responsibility for their timid infants by feeding them milk as well as soft foods, so that stay happy and don't become irate during the evening.";
 		$textArea.val(msg);
 		return false;
 	});
