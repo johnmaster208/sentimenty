@@ -53,7 +53,7 @@
         if(chartType === 'pie') {
         	var $container = $('div.modal-body');
         	var maxModalWidth = $container.width();
-        	console.log(maxModalWidth);
+        	//console.log(maxModalWidth);
         	//var $chartContainer = 
         	// $chartContainer.appendTo('div.modal-body');
         	var c = new Highcharts.Chart({
