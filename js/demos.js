@@ -1,6 +1,7 @@
 (function($){
 
-	function drawModal() {
+	function createModal() {
+		$('#results').remove();
 		var popup =  '<div id="results" class="modal fade text-center" role="dialog">';
 				popup += '<div class="modal-dialog">';
 					popup += '<div class="modal-content">';
@@ -10,6 +11,21 @@
 				popup += '</div>';
 			popup += '</div>';
 		$('body').append(popup);
+	}
+	function renderModal($container, content) {
+		$container.find('div.modal-body').html('');
+		$container.modal();
+		$container.find('div.modal-body').html(content);
+	}
+	function rebuildOutput(output){
+		$('div#accordion').remove();
+		$('div#charts-button').remove();
+		window.tpchartdata = output.data || '';
+		var resultsPanel = '<div class="panel-group col-xs-12 col-md-8 row" id="accordion" role="tablist" aria-multiselectable="true">';
+		var chartButton = '<div id="chart-button" class="btn btn-lg btn-danger">Chart</div>';
+		$('#textpool-panel').append(resultsPanel).append(chartButton);
+		drawOutputDrawer(output.data,output.reqType);
+		
 	}
 	function drawHighChart(seriesData,chartType) {
 		var sentimentData = [];
@@ -21,13 +37,16 @@
 		}
         // PIE CHART
         if(chartType === 'pie') {
-        	$('#results div.modal-body').highcharts({
+        	//var $container = $('div.modal-body');
+        	var $container = $('div.modal-body');
+        	var c = new Highcharts.Chart({
 	            chart: {
 	                plotBackgroundColor: null,
 	                plotBorderWidth: null,
 	                plotShadow: false,
 	                type: 'pie',
-	                credits: false
+	                credits: false,
+	                renderTo: $container[0]
 	            },
 	            title: {
 	                text: 'Emotional Breakdown'
@@ -55,11 +74,11 @@
 	            }
         	});
         }//end if chart === pie    
-	}//end drawHighChart
+	}
 	function drawOutputDrawer(data,format) {
 
 		if(format === 'json') {
-			var jsonToggle =  '<div class="panel panel-default panel-primary">';
+			var jsonToggle =  '<div class="panel panel-default panel-success">';
 					jsonToggle += '<div class="panel-heading" role="tab" id="json">';
 					jsonToggle += '<h4 class="panel-title">';
 						jsonToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseJSON">';
@@ -110,10 +129,22 @@
 			preMsg2 += '<p class="text-muted">Now let\'s get to work...</p>';
 			preMsg2 += '<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>';
 			preMsg2 += '</div>';
+		var preMsg3 =  '<div clas="">';
+			preMsg3 += '<p class="lead">Hmmm...interesting.</p>';
+			preMsg3 += '<p class="text-muted">I\'ll have to think about this one...</p>';
+			preMsg3 += '<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>';
+			preMsg3 += '</div>';
 
-		loaders.push(preMsg1,preMsg2);
+		loaders.push(preMsg1,preMsg2,preMsg3);
 		return loaders[Math.floor(Math.random()*loaders.length)];
 	}
+
+
+	/**
+	* EVENT HANLDERS
+	**/
+
+	/* GENERATE TEXT */
 	$('button#textpool-generate').on('click',function(e) {
 		e.preventDefault();
 		var $form = $(this).closest('form');
@@ -122,70 +153,65 @@
 		$textArea.val(msg);
 		return false;
 	});
+
+	/* TEXTPOOL SUBMIT */
 	$('form#textpool-form-submit').submit(function(e) {
 		e.preventDefault();
-		$('#results').remove();
-		$('#chart-button').remove();
-		//add the modal
-		drawModal();
-		//clear the output drawer
-		$('div#accordion').remove();
+		createModal();
 		var $container = $('#results');
 		var $textpoolField = $(this).find('#textpool-narrative');
 		if($textpoolField.val().length == 0 || $textpoolField.val().length < 3){
-			$container.modal();
-			$container.find('div.modal-body')
-			.html('<div class="well well-lg"><p class="lead text-danger">Uh, oh. No sentiments loaded.</p><p class="lead"> Try adding some more text?</p></div>');
+			var noPool =  '<div class="well well-lg">';
+				noPool += '<p class="lead text-danger">';
+				noPool += 'Uh, oh. No sentiments loaded.';
+				noPool += '</p>';
+				noPool += '<p class="lead">Try adding some more text?</p>';
+				noPool += '</div>';
+			renderModal($container,noPool);
 			return false;
 		} else {
-			$container.modal();
 			var formData = $(this).serialize();
-			$container.on('hide.bs.modal',function(e){
-				$container.find('div.modal-body').html('');
-			});
-			$container.on('shown.bs.modal',function(e){
-				$.ajax({
-					'url': '/s/textpool',
-					'type': 'POST',
-					'data': formData,
-					'beforeSend': function(){
-						var loader = generateRandomPreloader();
-						$container.find('div.modal-body').html(loader);
-					},
-					'success': function(data) {
-						var reqType = this.data.match(/&format=([\w]*)/)[1];
-						$container.find('div.modal-body')
-						.html('<div class=""><h1 class="text-success">Finished!</h1><p class="text-muted">Go look on the demo page for your results!</p></div>')
-						.hide()
-						.fadeIn()
-						.animate({opacity: 1}, 100)
-						.animate({opacity: 0}, 100)
-						.animate({opacity: 1}, 100);
-						//console.log(this.data);
-						setTimeout(function(){
-							$('#results').modal('hide');
-						}, 2000);
-						$('div#accordion').remove();
-						var resultsPanel = '<div class="panel-group col-xs-12 col-md-6 row" id="accordion" role="tablist" aria-multiselectable="true">';
-						$('#textpool-panel').append(resultsPanel);
-						// window.tpchartdata = data || {};
-						drawOutputDrawer(data,reqType);
-					}
-				});//end ajax
-			});
+			$.ajax({
+				'url': '/s/textpool',
+				'type': 'POST',
+				'data': formData,
+				'beforeSend': function(){
+					var loader = generateRandomPreloader();
+					renderModal($('#results'),loader);
+				},
+				'success': function(data) {
+					var output = {};
+					output.data = data;
+					output.reqType = this.data.match(/&format=([\w]*)/)[1];
+					var finishedMsg =  '<div class="">';
+						finishedMsg += '<h1 class="text-success">Finished!</h1>';
+						finishedMsg += '<p class="text-muted">Go look on the demo page for your results!</p>';
+						finishedMsg += '</div>';
+						renderModal($('#results'),finishedMsg);
+					setTimeout(function(){$('#results').modal('hide');}, 2000);
+					rebuildOutput(output);
+				}
+			});//end ajax
+			// $container.on('hide.bs.modal',function(e){
+			// 	$container.find('div.modal-body').html('');
+			// });
+			// $container.on('shown.bs.modal',function(e){
+			// });
 		}//end else no text
 		
 		return false;
 	});
+
+	/* CHART BUTTON */
 	$('body').on('click','#chart-button',function(e){
 		e.preventDefault();
-		var $container = $('#results');
-		$container.find('div.body').html('');
-		var chart = drawHighChart(window.tpchartdata,'pie');
-		if(chart !== 'undefined'){
-			$container.find('div.modal-body').html(chart);
-			$container.modal();
-		}
+		//var chart = drawHighChart(window.tpchartdata,'pie');
+		//if(chart !== 'undefined'){
+			var $chartContainer = $('#results');
+			$chartContainer.find('div.modal-body').html('');
+			$chartContainer.modal();
+			drawHighChart(window.tpchartdata,'pie');
+		//}
 		return false;
 	});
 
