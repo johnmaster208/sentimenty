@@ -5,21 +5,30 @@
 		var popup =  '<div id="results" class="modal fade text-center" role="dialog">';
 				popup += '<div class="modal-dialog">';
 					popup += '<div class="modal-content">';
-						popup += '<div class="modal-body">';
+						popup += '<div class="modal-body" id="modal-body">';
 						popup += '</div>';
 					popup += '</div>';
 				popup += '</div>';
 			popup += '</div>';
 		$('body').append(popup);
 	}
-	function renderModal($container, content) {
-		$container.find('div.modal-body').html('');
-		$container.modal();
-		$container.find('div.modal-body').html(content);
+	function renderModal($container, content, type) {
+		if(type == 'textMsg'){
+			$container.find('div.modal-body').html('');
+			$container.modal();
+			$container.find('div.modal-body').html(content);
+		} else if (type == 'chartData') {
+			$container.modal();
+			$container.on('shown.bs.modal',function(e){
+				$(this)
+				.find('div.modal-body')
+				.html(drawHighChart(content,'pie'));
+			});
+		}
 	}
 	function rebuildOutput(output){
 		$('div#accordion').remove();
-		$('div#charts-button').remove();
+		$('div#chart-button').remove();
 		window.tpchartdata = output.data || '';
 		var resultsPanel = '<div class="panel-group col-xs-12 col-md-8 row" id="accordion" role="tablist" aria-multiselectable="true">';
 		var chartButton = '<div id="chart-button" class="btn btn-lg btn-danger">Chart</div>';
@@ -27,21 +36,29 @@
 		drawOutputDrawer(output.data,output.reqType);
 		
 	}
+
+
 	function drawHighChart(seriesData,chartType) {
 		var sentimentData = [];
 		for(var i = 0; i < seriesData.length; i++ ) {
 			var obj = {};
-			obj.name = seriesData[i]['word'];
-			obj.y = seriesData[i]['count'];
+			obj.word = seriesData[i]['word'];
+			obj.count = seriesData[i]['count'];
+			obj.name = seriesData[i]['sentiment'];
+			obj.position = seriesData[i]['position'];
+			obj.y = seriesData[i]['distribution'] * 100;
 			sentimentData.push(obj);
 		}
         // PIE CHART
         if(chartType === 'pie') {
-        	//var $container = $('div.modal-body');
         	var $container = $('div.modal-body');
+        	var maxModalWidth = $container.width();
+        	console.log(maxModalWidth);
+        	//var $chartContainer = 
+        	// $chartContainer.appendTo('div.modal-body');
         	var c = new Highcharts.Chart({
 	            chart: {
-	                plotBackgroundColor: null,
+	                backgroundColor: null,
 	                plotBorderWidth: null,
 	                plotShadow: false,
 	                type: 'pie',
@@ -52,7 +69,20 @@
 	                text: 'Emotional Breakdown'
 	            },
 	            tooltip: {
-	                pointFormat: '<b>{point.y}</b>'
+	            	formatter: function(){
+	            		var triggerWordList = [];
+	            		for(var i = 0; i < window.tpchartdata.length; i++) {
+	            			var obj = window.tpchartdata[i];
+	            			for(key in obj){
+	            				if(key == 'sentiment'){
+	            					triggerWordList[obj[key]] = obj['word'];
+	            				}
+	            			}
+	            		}
+	            		return '<h3 class="lead">'+this.key+' '+this.y+'%</h3><p class="text-muted">triggered on words like: <b>'+triggerWordList[this.key].toString()+'</b></p>';
+	            	},
+	            	useHTML: true
+	                //pointFormat: '<b>{point.y}</b>'
 	            },
 	            plotOptions: {
 	                pie: {
@@ -73,7 +103,8 @@
 	            	enabled: false
 	            }
         	});
-        }//end if chart === pie    
+	
+        }//end if chart === pie  
 	}
 	function drawOutputDrawer(data,format) {
 
@@ -167,7 +198,7 @@
 				noPool += '</p>';
 				noPool += '<p class="lead">Try adding some more text?</p>';
 				noPool += '</div>';
-			renderModal($container,noPool);
+			renderModal($container,noPool,'textMsg');
 			return false;
 		} else {
 			var formData = $(this).serialize();
@@ -177,7 +208,7 @@
 				'data': formData,
 				'beforeSend': function(){
 					var loader = generateRandomPreloader();
-					renderModal($('#results'),loader);
+					renderModal($('#results'),loader,'textMsg');
 				},
 				'success': function(data) {
 					var output = {};
@@ -187,7 +218,7 @@
 						finishedMsg += '<h1 class="text-success">Finished!</h1>';
 						finishedMsg += '<p class="text-muted">Go look on the demo page for your results!</p>';
 						finishedMsg += '</div>';
-						renderModal($('#results'),finishedMsg);
+						renderModal($('#results'),finishedMsg,'textMsg');
 					setTimeout(function(){$('#results').modal('hide');}, 2000);
 					rebuildOutput(output);
 				}
@@ -206,13 +237,13 @@
 	$('body').on('click','#chart-button',function(e){
 		e.preventDefault();
 		//var chart = drawHighChart(window.tpchartdata,'pie');
-		//if(chart !== 'undefined'){
-			var $chartContainer = $('#results');
-			$chartContainer.find('div.modal-body').html('');
-			$chartContainer.modal();
-			drawHighChart(window.tpchartdata,'pie');
-		//}
+		var chart = window.tpchartdata;
+		if(chart !== 'undefined'){
+			renderModal($('#results'),chart,'chartData');
+			//window.dispatchEvent(new Event('resize'));
+		}
 		return false;
 	});
+
 
 })(jQuery);
