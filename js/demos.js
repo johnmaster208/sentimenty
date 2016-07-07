@@ -33,13 +33,14 @@
 		var resultsPanel = '<div class="panel-group col-xs-12 col-md-8 row" id="accordion" role="tablist" aria-multiselectable="true">';
 		var chartButton = '<div id="chart-button" class="btn btn-lg btn-danger">Chart</div>';
 		$('#textpool-panel').append(resultsPanel).append(chartButton);
-		drawOutputDrawer(output.data,output.reqType);
-		
+		drawOutputDrawer(output.data,output.reqType);		
 	}
-
-
 	function drawHighChart(seriesData,chartType) {
 		var sentimentData = [];
+		var totalUsedDist = 0;
+		var totalUnusedDist = 0;
+		var thisSentiment = {};
+		//this part is necessary. We need to get the sentiment data organized.
 		for(var i = 0; i < seriesData.length; i++ ) {
 			var obj = {};
 			obj.word = seriesData[i]['word'];
@@ -49,6 +50,23 @@
 			obj.y = seriesData[i]['distribution'] * 100;
 			sentimentData.push(obj);
 		}
+		//inside of sentimentData, we want to merge 
+		//the objects who have the same sentiment name
+		for(var i = 0; i < sentimentData.length; i++) {
+			thisSentiment[sentimentData[i]['name']] = sentimentData[i]['y'];
+		}
+		//lastly for thisSentiment, rebuild the sentimentData array with unique values
+		var sentimentSeriesData = [];
+		for(key in thisSentiment){
+			var obj = {};
+			totalUsedDist += thisSentiment[key];
+			obj.name = key;
+			obj.y = thisSentiment[key];
+			sentimentSeriesData.push(obj);
+		}
+		totalUnusedDist = 100.0 - totalUsedDist;
+		sentimentSeriesData.push({name: "other", y: totalUnusedDist});
+		//CREATE THE CHART!!
         // PIE CHART
         if(chartType === 'pie') {
         	var $container = $('div.modal-body');
@@ -70,16 +88,12 @@
 	            },
 	            tooltip: {
 	            	formatter: function(){
-	            		var triggerWordList = [];
-	            		for(var i = 0; i < window.tpchartdata.length; i++) {
-	            			var obj = window.tpchartdata[i];
-	            			for(key in obj){
-	            				if(key == 'sentiment'){
-	            					triggerWordList[obj[key]] = obj['word'];
-	            				}
-	            			}
+	            		
+	            		if(this.key !== 'other'){
+	            		return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3>';
+	            		} else {
+            			return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3><p class="small text-muted">no sentimental value.</p>';	
 	            		}
-	            		return '<h3 class="lead">'+this.key+' '+this.y+'%</h3><p class="text-muted">triggered on words like: <b>'+triggerWordList[this.key].toString()+'</b></p>';
 	            	},
 	            	useHTML: true
 	                //pointFormat: '<b>{point.y}</b>'
@@ -97,7 +111,7 @@
 	            series: [{
 	                name: 'Sentiment',
 	                colorByPoint: true,
-	                data: sentimentData
+	                data: sentimentSeriesData
 	            }],
 	            credits: {
 	            	enabled: false
@@ -170,7 +184,6 @@
 		return loaders[Math.floor(Math.random()*loaders.length)];
 	}
 
-
 	/**
 	* EVENT HANLDERS
 	**/
@@ -180,8 +193,9 @@
 		e.preventDefault();
 		var $form = $(this).closest('form');
 		var $textArea = $form.find('textarea#textpool-narrative');
-		var msg = "Many babies during the first 3 months of life are happy and care-free. Mothers often accept responsibility for their timid infants by feeding them milk as well as soft foods, so that stay happy and don't become irate during the evening.";
-		$textArea.val(msg);
+		var msg1 = "Many babies during the first 3 months of life are happy and carefree. Mothers often accept responsibility for their timid infants by feeding them milk as well as soft foods, so that stay happy and don't become irate or angry during the evening. Boy, what a joy that next morning would be!";
+		var msg2 = "Conjoined twins are capable of leading separate lives, but the most interesting questions delve into the realm of perception and feeling, or in the case of those conjoined at the brain, shared cognitive abilities. This poses additional questions such as where their mental images originate, and whether one twin is able to read the mind of the other.";
+		$textArea.val(msg1);
 		return false;
 	});
 

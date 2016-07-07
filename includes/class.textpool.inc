@@ -105,7 +105,7 @@ class TextPool extends NLP {
 		}
 	}
 	private function _gatherTrust(){
-		$trust = array('trust','trustful','trusting','trustworthy','confide','confiding','confided','unsuspect','unsuspected','unsuspecting','credulous','trusty','authentic','authenticate','authenticated','reliable','reliability','credit','creditworthy','creditable','responsible','responsibility','dependable','honest','truthful','truth','true','honesty','fiducal','sure','more sure','surest','trusted','faithful','faith','honorable','pride','proud','prominent','celebrated','famous','illustrious','renowned','famed','leading','eminent','distinguished','notable','noted','noteworthy','influential','affluential','affluent','important','know','known','knowing','reputable','respected','established','respect','establish','prestigious');
+		$trust = array('trust','trustful','trusting','trustworthy','confide','confiding','confided','unsuspect','unsuspected','unsuspecting','credulous','trusty','authentic','authenticate','authenticated','reliable','reliability','credit','creditworthy','creditable','responsible','responsibility','dependable','honest','truthful','truth','true','honesty','fiducal','sure','more sure','surest','trusted','faithful','faith','honorable','pride','proud','prominent','celebrated','famous','illustrious','renowned','famed','leading','eminent','distinguished','notable','noted','noteworthy','influential','affluential','affluent','important','know','known','knowing','reputable','respected','established','respect','establish','prestigious','shared','share','sharing');
 		$s = $this->_getSegment();
 		if(in_array($s['word'], $trust)) {
 			$data = array(
@@ -220,7 +220,8 @@ class TextPool extends NLP {
 		$not_used = $nullSentiments($possibleSentiments);
 		foreach($this->textpool as $key => $value) {
 			foreach($used as $k => $v){
-				$distribution = $v / count($possibleSentiments);
+				// $distribution = $v / count($possibleSentiments);
+				$distribution = $v / $wordCount;
 				if($k == $value['sentiment']){
 					$this->textpool[$key]['distribution'] = $distribution;
 				}
