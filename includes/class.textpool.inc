@@ -49,7 +49,7 @@ class TextPool extends NLP {
 		}
 	}
 	private function _gatherAnger(){
-		$anger = array('angry','aggravated','provoked','angered','enraged','furious','infuriated','maddened','choleric','irascible','hot under the colloar','huffy','mad','sore','indignant','incensed','outraged','umbrageous','irate','ireful','livid','smoldering','smouldering','wrath','wrathful','wroth','wrothful','mean','nasty','awful','hate','hatred','rage','raging','fury','vexation','exasperation','displeasure','crossness','displeased','irritate','irritated','irritability','indignation','pique','annoyed','annoyance','aggravate','aggravated','aggravation','umbrage','chafe','chafed','apoplectic','acrimonious','caustic','acerbic','scathing','acid','harsh','sharp','cutting','virulent','spiteful','vicious','hostile','venemous','pernicious','bitchy','nasty','catty');
+		$anger = array('anger','angry','aggravated','provoked','angered','enraged','furious','infuriated','maddened','choleric','irascible','hot under the colloar','huffy','mad','sore','indignant','incensed','outraged','umbrageous','irate','ireful','livid','smoldering','smouldering','wrath','wrathful','wroth','wrothful','mean','nasty','awful','hate','hatred','rage','raging','fury','vexation','exasperation','displeasure','crossness','displeased','irritate','irritated','irritability','indignation','pique','annoyed','annoyance','aggravate','aggravated','aggravation','umbrage','chafe','chafed','apoplectic','acrimonious','caustic','acerbic','scathing','acid','harsh','sharp','cutting','virulent','spiteful','vicious','hostile','venemous','pernicious','bitchy','nasty','catty');
 		$s = $this->_getSegment();
 		if(in_array($s['word'], $anger)) {
 			$data = array(
@@ -205,7 +205,11 @@ class TextPool extends NLP {
 		);
 		foreach($this->textpool as $key => $value) {
 			//increment the possibleSentiment count for that sentiment
-			$possibleSentiments[$value['sentiment']]++;
+			if($value['count'] != 1){
+				$possibleSentiments[$value['sentiment']] = $value['count'];
+			} else {
+				$possibleSentiments[$value['sentiment']]++;
+			}
 		}
 		$used = array_filter($possibleSentiments);
 		$nullSentiments = function($array) {
@@ -220,8 +224,9 @@ class TextPool extends NLP {
 		$not_used = $nullSentiments($possibleSentiments);
 		foreach($this->textpool as $key => $value) {
 			foreach($used as $k => $v){
-				// $distribution = $v / count($possibleSentiments);
-				$distribution = $v / $wordCount	;
+				//$distribution = $v / count($possibleSentiments);
+				//$sentimentD = 
+				$distribution = $v / $wordCount;
 				if($k == $value['sentiment']){
 					$this->textpool[$key]['distribution'] = $distribution;
 				}
@@ -241,8 +246,8 @@ class TextPool extends NLP {
 		parent::__construct($text);
 		$this->_poolSentimentData();
 		$this->_mergeDuplicateWordsOnPosition();
-		$this->_calculateSentimentDistribution();
 		$this->_calculateSentimentDensity();
+		$this->_calculateSentimentDistribution();
 		return $this;
 	}
 

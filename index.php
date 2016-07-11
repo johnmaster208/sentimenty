@@ -14,8 +14,14 @@
 			    <h4 class="text-muted">learning the emotional web</h4>
 		    </div>
 		    <div class="intro col-xs-12 col-sm-12 col-md-12">
-		      <h2>What is it?</h2>
-		      <p>Sentimenty is a service that learns emotion (<em>or, sentiment</em>) out of text.</p>
+		      	<h2>What is it?</h2>
+		      	<p>Sentimenty is free service that discovers emotion (<em>sentiment</em>) from text. Through the usage of natural language processing (NLP), it gathers sentimental value from keywords and returns their emotional density and distribution in friendly formats, like JSON and XML.</p>
+	      	</div>
+	      	<div class="nauseam col-xs-12 col-sm-12 col-md-12">
+	        	<h2>Why did you name it Sentimenty?</h2>
+		      	<p>Why not? Half of the internet is basically full of harebrained domains/subdomains ending in 'y', 'ly', 'ley', 'ic' and 'er'. I figured since sentiment.ly was already taken, I could make ends meet. Also, EmotionAPI sounded kind of lame, and a little too Dashboard Confessional(.ly)</p>
+	      	</div>
+	      	<div class="desc col-xs-12 col-sm-12 col-md-12">
 		      <h2>How does it work?</h2>
 		      <p>Through generic POST requests to the following endpoint(s):</p>
 		    </div>
@@ -45,10 +51,7 @@
 		              </a>
 	        	  	</div>	</section>
         	</div>
-	      	<div class="nauseam col-xs-12 col-sm-12">
-	        	<h2>Why did you name it Sentimenty?</h2>
-		      	<p>Mostly because the Sentiment.ly domain was taken already, but also because EmotionAPI sounded a little boring and too "Dashboard Confessionally"</p>
-	      	</div>
+	      	
 	    </div>
 	    <script type="text/javascript" src="/js/jquery.min.js"></script>
 	    <script type="text/javascript" src="/js/bootstrap.min.js"></script>

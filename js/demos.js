@@ -201,7 +201,7 @@
 		} else {
 			seriesData = seriesData;
 		}
-		var sentimentData = [];
+		sentimentData = [];
 		var totalUsedDist = 0;
 		var totalUnusedDist = 0;
 		var thisSentiment = {};
@@ -230,7 +230,9 @@
 			sentimentSeriesData.push(obj);
 		}
 		totalUnusedDist = 100.0 - totalUsedDist;
-		sentimentSeriesData.push({name: "other", y: totalUnusedDist});
+		if(totalUnusedDist !== 0) {
+			sentimentSeriesData.push({name: "other", y: totalUnusedDist});
+		}
 		//CREATE THE CHART!!
         // PIE CHART
         if(chartType === 'pie') {
@@ -255,9 +257,9 @@
 	            	formatter: function(){
 	            		
 	            		if(this.key !== 'other'){
-	            		return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3>';
+	            			return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3><small>triggered by:<strong> '+generateWordContext(this.key)+'</strong></small>';
 	            		} else {
-            			return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3><p class="small text-muted">no sentimental value.</p>';	
+            			return '<h3 class="lead">'+this.key+' '+this.y.toFixed(3)+'%</h3><p class="small text-muted">unused sentiments and/or words</p>';	
 	            		}
 	            	},
 	            	useHTML: true
@@ -283,17 +285,17 @@
 	            }
         	});
 	
-        }//end if chart === pie  
+        }//end if chart === pie        
 	}
 	function drawOutputDrawer(data,format) {
 		if(format === 'json') {
 			var jsonToggle =  '<div class="panel panel-success">';
 					jsonToggle += '<div class="panel-heading" role="tab" id="json">';
-					jsonToggle += '<h4 class="panel-title">';
-						jsonToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseJSON">';
+					jsonToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseJSON" style="text-decoration:none">';
+						jsonToggle += '<h4 class="panel-title">';
 							jsonToggle += 'JSON';
-						jsonToggle += '</a>';
-					jsonToggle += '</h4>';
+						jsonToggle += '</h4>';
+					jsonToggle += '</a>';
 					jsonToggle += '</div>';
 					jsonToggle += '<div id="collapseJSON" class="panel-collapse collapse" role="tabpanel">';
 						jsonToggle += '<div class="panel-body">';
@@ -304,11 +306,11 @@
 		} else if (format === 'xml') {
 			var xmlToggle =  '<div class="panel panel-success">';
 				xmlToggle += '<div class="panel-heading" role="tab" id="xml">';
-				xmlToggle += '<h4 class="panel-title">';
-					xmlToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseXML" aria-expanded="false">';
-						xmlToggle += 'XML';
-					xmlToggle += '</a>';
-				xmlToggle += '</h4>';
+				xmlToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseXML" style="text-decoration:none">';
+					xmlToggle += '<h4 class="panel-title">';
+							xmlToggle += 'XML';
+					xmlToggle += '</h4>';
+				xmlToggle += '</a>';
 				xmlToggle += '</div>';
 				xmlToggle += '<div id="collapseXML" class="panel-collapse collapse" role="tabpanel">';
 					xmlToggle += '<div class="panel-body">';
@@ -348,6 +350,15 @@
 
 		loaders.push(preMsg1,preMsg2,preMsg3,preMsg4);
 		return loaders[Math.floor(Math.random()*loaders.length)];
+	}
+	function generateWordContext(key){
+	 	var words = [];
+        for(var i = 0; i < sentimentData.length; i++) {
+        	if(sentimentData[i]['name'] === key){
+        		words.push(sentimentData[i]['word']);
+        	}
+        }
+        return words.join(', ');
 	}
 
 	/**
