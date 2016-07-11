@@ -221,7 +221,7 @@ class TextPool extends NLP {
 		foreach($this->textpool as $key => $value) {
 			foreach($used as $k => $v){
 				// $distribution = $v / count($possibleSentiments);
-				$distribution = $v / $wordCount;
+				$distribution = $v / $wordCount	;
 				if($k == $value['sentiment']){
 					$this->textpool[$key]['distribution'] = $distribution;
 				}

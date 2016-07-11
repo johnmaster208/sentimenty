@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/fontawesome.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/styles.css" type="text/css">
 	</head>
   	<body>
 	    <div class="container-fluid">
@@ -40,7 +41,7 @@
 		            </div>
 		            <div class="cta col-xs-12 col-sm-12">
 			            <a href="/demo/textpool">
-			              <button class="btn btn-md btn-primary">Try it out!</button>
+			              <button class="btn btn-default btn-lg">Try it out! <i class="fa fa-play-circle"></i></button>
 		              </a>
 	        	  	</div>	</section>
         	</div>

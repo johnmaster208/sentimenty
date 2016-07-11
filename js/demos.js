@@ -5,6 +5,11 @@
 		var popup =  '<div id="results" class="modal fade text-center" role="dialog">';
 				popup += '<div class="modal-dialog">';
 					popup += '<div class="modal-content">';
+						popup += '<div class="modal-header" style="border:none">';
+						popup += '<button type="button" class="close" data-dismiss="modal">';
+						popup += '<span style="">&times;</span>';
+						popup += '</button>';
+						popup += '</div>';
 						popup += '<div class="modal-body" id="modal-body">';
 						popup += '</div>';
 					popup += '</div>';
@@ -26,16 +31,176 @@
 			});
 		}
 	}
+	function xml2json(xml, tab) {
+	   var X = {
+	      toObj: function(xml) {
+	         var o = {};
+	         if (xml.nodeType==1) {   // element node ..
+	            if (xml.attributes.length)   // element with attributes  ..
+	               for (var i=0; i<xml.attributes.length; i++)
+	                  o["@"+xml.attributes[i].nodeName] = (xml.attributes[i].nodeValue||"").toString();
+	            if (xml.firstChild) { // element has child nodes ..
+	               var textChild=0, cdataChild=0, hasElementChild=false;
+	               for (var n=xml.firstChild; n; n=n.nextSibling) {
+	                  if (n.nodeType==1) hasElementChild = true;
+	                  else if (n.nodeType==3 && n.nodeValue.match(/[^ \f\n\r\t\v]/)) textChild++; // non-whitespace text
+	                  else if (n.nodeType==4) cdataChild++; // cdata section node
+	               }
+	               if (hasElementChild) {
+	                  if (textChild < 2 && cdataChild < 2) { // structured element with evtl. a single text or/and cdata node ..
+	                     X.removeWhite(xml);
+	                     for (var n=xml.firstChild; n; n=n.nextSibling) {
+	                        if (n.nodeType == 3)  // text node
+	                           o["#text"] = X.escape(n.nodeValue);
+	                        else if (n.nodeType == 4)  // cdata node
+	                           o["#cdata"] = X.escape(n.nodeValue);
+	                        else if (o[n.nodeName]) {  // multiple occurence of element ..
+	                           if (o[n.nodeName] instanceof Array)
+	                              o[n.nodeName][o[n.nodeName].length] = X.toObj(n);
+	                           else
+	                              o[n.nodeName] = [o[n.nodeName], X.toObj(n)];
+	                        }
+	                        else  // first occurence of element..
+	                           o[n.nodeName] = X.toObj(n);
+	                     }
+	                  }
+	                  else { // mixed content
+	                     if (!xml.attributes.length)
+	                        o = X.escape(X.innerXml(xml));
+	                     else
+	                        o["#text"] = X.escape(X.innerXml(xml));
+	                  }
+	               }
+	               else if (textChild) { // pure text
+	                  if (!xml.attributes.length)
+	                     o = X.escape(X.innerXml(xml));
+	                  else
+	                     o["#text"] = X.escape(X.innerXml(xml));
+	               }
+	               else if (cdataChild) { // cdata
+	                  if (cdataChild > 1)
+	                     o = X.escape(X.innerXml(xml));
+	                  else
+	                     for (var n=xml.firstChild; n; n=n.nextSibling)
+	                        o["#cdata"] = X.escape(n.nodeValue);
+	               }
+	            }
+	            if (!xml.attributes.length && !xml.firstChild) o = null;
+	         }
+	         else if (xml.nodeType==9) { // document.node
+	            o = X.toObj(xml.documentElement);
+	         }
+	         else
+	            alert("unhandled node type: " + xml.nodeType);
+	         return o;
+	      },
+	      toJson: function(o, name, ind) {
+	         var json = name ? ("\""+name+"\"") : "";
+	         if (o instanceof Array) {
+	            for (var i=0,n=o.length; i<n; i++)
+	               o[i] = X.toJson(o[i], "", ind+"\t");
+	            json += (name?":[":"[") + (o.length > 1 ? ("\n"+ind+"\t"+o.join(",\n"+ind+"\t")+"\n"+ind) : o.join("")) + "]";
+	         }
+	         else if (o == null)
+	            json += (name&&":") + "null";
+	         else if (typeof(o) == "object") {
+	            var arr = [];
+	            for (var m in o)
+	               arr[arr.length] = X.toJson(o[m], m, ind+"\t");
+	            json += (name?":{":"{") + (arr.length > 1 ? ("\n"+ind+"\t"+arr.join(",\n"+ind+"\t")+"\n"+ind) : arr.join("")) + "}";
+	         }
+	         else if (typeof(o) == "string")
+	            json += (name&&":") + "\"" + o.toString() + "\"";
+	         else
+	            json += (name&&":") + o.toString();
+	         return json;
+	      },
+	      innerXml: function(node) {
+	         var s = ""
+	         if ("innerHTML" in node)
+	            s = node.innerHTML;
+	         else {
+	            var asXml = function(n) {
+	               var s = "";
+	               if (n.nodeType == 1) {
+	                  s += "<" + n.nodeName;
+	                  for (var i=0; i<n.attributes.length;i++)
+	                     s += " " + n.attributes[i].nodeName + "=\"" + (n.attributes[i].nodeValue||"").toString() + "\"";
+	                  if (n.firstChild) {
+	                     s += ">";
+	                     for (var c=n.firstChild; c; c=c.nextSibling)
+	                        s += asXml(c);
+	                     s += "</"+n.nodeName+">";
+	                  }
+	                  else
+	                     s += "/>";
+	               }
+	               else if (n.nodeType == 3)
+	                  s += n.nodeValue;
+	               else if (n.nodeType == 4)
+	                  s += "<![CDATA[" + n.nodeValue + "]]>";
+	               return s;
+	            };
+	            for (var c=node.firstChild; c; c=c.nextSibling)
+	               s += asXml(c);
+	         }
+	         return s;
+	      },
+	      escape: function(txt) {
+	         return txt.replace(/[\\]/g, "\\\\")
+	                   .replace(/[\"]/g, '\\"')
+	                   .replace(/[\n]/g, '\\n')
+	                   .replace(/[\r]/g, '\\r');
+	      },
+	      removeWhite: function(e) {
+	         e.normalize();
+	         for (var n = e.firstChild; n; ) {
+	            if (n.nodeType == 3) {  // text node
+	               if (!n.nodeValue.match(/[^ \f\n\r\t\v]/)) { // pure whitespace text node
+	                  var nxt = n.nextSibling;
+	                  e.removeChild(n);
+	                  n = nxt;
+	               }
+	               else
+	                  n = n.nextSibling;
+	            }
+	            else if (n.nodeType == 1) {  // element node
+	               X.removeWhite(n);
+	               n = n.nextSibling;
+	            }
+	            else                      // any other node
+	               n = n.nextSibling;
+	         }
+	         return e;
+	      }
+	   };
+	   if (xml.nodeType == 9) // document node
+	      xml = xml.documentElement;
+	   var json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
+	   return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
+	}
 	function rebuildOutput(output){
-		$('div#accordion').remove();
-		$('div#chart-button').remove();
+		$('#accordion').remove();
+		$('#chart-button').remove();
 		window.tpchartdata = output.data || '';
-		var resultsPanel = '<div class="panel-group col-xs-12 col-md-8 row" id="accordion" role="tablist" aria-multiselectable="true">';
-		var chartButton = '<div id="chart-button" class="btn btn-lg btn-danger">Chart</div>';
-		$('#textpool-panel').append(resultsPanel).append(chartButton);
+		var resultsPanel = '<div class="panel-group col-xs-12 col-md-8" id="accordion" role="tablist" aria-multiselectable="true"></div>';
+		var chartButton = '&nbsp;<button id="chart-button" class="btn btn-success btn-lg text-uppercase"><i class="fa fa-pie-chart"></i> Chart</button>';
+		var demoOutput = '<div class="container-fluid">'+resultsPanel+'</div>';
+		$('#textpool-panel').after(demoOutput);
+		$('#textpool-submit').after(chartButton);
 		drawOutputDrawer(output.data,output.reqType);		
 	}
 	function drawHighChart(seriesData,chartType) {
+
+		//if the reqType was XML, convert to an obj
+		if(typeof seriesData.length === 'undefined') {
+			var data = xml2json(seriesData,"");
+			var toJSONObj = $.parseJSON(data);
+			seriesData = toJSONObj.text.sentiment;
+			//var foo = 'bar';
+		} else {
+			seriesData = seriesData;
+		}
 		var sentimentData = [];
 		var totalUsedDist = 0;
 		var totalUnusedDist = 0;
@@ -121,9 +286,8 @@
         }//end if chart === pie  
 	}
 	function drawOutputDrawer(data,format) {
-
 		if(format === 'json') {
-			var jsonToggle =  '<div class="panel panel-default panel-success">';
+			var jsonToggle =  '<div class="panel panel-success">';
 					jsonToggle += '<div class="panel-heading" role="tab" id="json">';
 					jsonToggle += '<h4 class="panel-title">';
 						jsonToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseJSON">';
@@ -133,12 +297,12 @@
 					jsonToggle += '</div>';
 					jsonToggle += '<div id="collapseJSON" class="panel-collapse collapse" role="tabpanel">';
 						jsonToggle += '<div class="panel-body">';
-						jsonToggle += '<pre><small>'+JSON.stringify(data,null,2)+'</small></pre>';
+						jsonToggle += '<pre>'+JSON.stringify(data,null,2)+'</pre>';
 						jsonToggle += '</div>';
 					jsonToggle += '</div>';
 				jsonToggle += '</div>';
 		} else if (format === 'xml') {
-			var xmlToggle =  '<div class="panel panel-default panel-primary">';
+			var xmlToggle =  '<div class="panel panel-success">';
 				xmlToggle += '<div class="panel-heading" role="tab" id="xml">';
 				xmlToggle += '<h4 class="panel-title">';
 					xmlToggle += '<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseXML" aria-expanded="false">';
@@ -149,24 +313,21 @@
 				xmlToggle += '<div id="collapseXML" class="panel-collapse collapse" role="tabpanel">';
 					xmlToggle += '<div class="panel-body">';
 					var xml = new XMLSerializer().serializeToString(data).toString();
-					xmlToggle += '<small><xmp>'+xml+'</xmp></small>';
+					xmlToggle += '<pre><xmp>'+xml+'</xmp></pre>';
 					xmlToggle += '</div>';
 				xmlToggle += '</div>';
 			xmlToggle += '</div>';
 		}
-
-
 		var output = '';
-		output += (typeof jsonToggle !== 'undefined') ? jsonToggle : '';
-		output += (typeof xmlToggle !== 'undefined') ? xmlToggle : '';
-
+		output += (typeof jsonToggle !== 'undefined') ? "<small>"+jsonToggle+"</small>" : '';
+		output += (typeof xmlToggle !== 'undefined') ? "<small>"+xmlToggle+"</small>" : '';
 		$('div#accordion').append(output);
 	}
 	function generateRandomPreloader(){
 		var loaders = [];
 		var preMsg1 =  '<div class="">';
 			preMsg1 += '<p class="lead">Oh boy, that\'s a tough one.</p>';
-			preMsg1 += '<p class="text-muted">Flossing our brains for awile...</p>';
+			preMsg1 += '<p class="text-muted">Flossing our brains for awhile...</p>';
 			preMsg1 += '<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>';
 			preMsg1 += '</div>';
 		var preMsg2 =  '<div clas="">';
@@ -179,8 +340,13 @@
 			preMsg3 += '<p class="text-muted">I\'ll have to think about this one...</p>';
 			preMsg3 += '<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>';
 			preMsg3 += '</div>';
+		var preMsg4 =  '<div clas="">';
+			preMsg4 += '<p class="lead">Good job!</p>';
+			preMsg4 += '<p class="text-muted">Just a moment while we run the numbers...</p>';
+			preMsg4 += '<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>';
+			preMsg4 += '</div>';
 
-		loaders.push(preMsg1,preMsg2,preMsg3);
+		loaders.push(preMsg1,preMsg2,preMsg3,preMsg4);
 		return loaders[Math.floor(Math.random()*loaders.length)];
 	}
 
@@ -193,9 +359,12 @@
 		e.preventDefault();
 		var $form = $(this).closest('form');
 		var $textArea = $form.find('textarea#textpool-narrative');
+		var randomMsgs = [];
 		var msg1 = "Many babies during the first 3 months of life are happy and carefree. Mothers often accept responsibility for their timid infants by feeding them milk as well as soft foods, so that stay happy and don't become irate or angry during the evening. Boy, what a joy that next morning would be!";
-		var msg2 = "Conjoined twins are capable of leading separate lives, but the most interesting questions delve into the realm of perception and feeling, or in the case of those conjoined at the brain, shared cognitive abilities. This poses additional questions such as where their mental images originate, and whether one twin is able to read the mind of the other.";
-		$textArea.val(msg1);
+		var msg2 = "Conjoined twins are capable of leading separate lives, but the most astounding questions delve into the realm of perception and feeling, or in the case of those conjoined at the brain, shared cognitive abilities. This poses additional questions such as where caring and loving mental images originate, and whether one twin is able to read the mind of the other.";
+		var msg3 = "The angry policemen chased the bandit through 3 states until they found his detestable hideout in a murky, revolting bayou. Knowing that he was awaiting an ambush, they  quickly coordinated a backup effort; they were fearful of his potential wrath upon himself or those around him.";
+		randomMsgs.push(msg1,msg2,msg3);
+		$textArea.val(randomMsgs[Math.floor(Math.random()*randomMsgs.length)]);
 		return false;
 	});
 
