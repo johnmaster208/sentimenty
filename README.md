@@ -12,10 +12,11 @@ Through generic POST requests to the following endpoint(s):
 #### Textpool
 -returns the emotional significance (or "e-sig" for short) of the text.
 
-#### Format
-/s/textpool/params/format
+#### Resource
+/s/textpool/params
 
-params
+#### Params
+
 text
 
 - Required. The submitted text or payload for processing any sentiments. 
