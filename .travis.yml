@@ -7,4 +7,4 @@ php:
 
 # before_script: composer install
 
-script: phpunit --configuration phpunit.xml --bootstrap autoload.php --testsuite sentimenty
+script: phpunit --configuration phpunit.xml --testsuite sentimenty

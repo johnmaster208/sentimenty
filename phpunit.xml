@@ -1,4 +1,4 @@
-<phpunit backupGlobals="true" bootstrap="vendor/autoload.php">
+<phpunit backupGlobals="true">
 	<testsuites>
 		<testsuite name="sentimenty">
 			<directory>tests</directory>
