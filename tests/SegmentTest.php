@@ -1,8 +1,6 @@
 <?php
 
 require __DIR__ . '/../includes/class.textpool.inc';
-require('vendor/autoload.php');
-
 
 class TPTest extends PHPUnit_Framework_TestCase {
 
