@@ -27,11 +27,11 @@ class TextPool extends NLP {
 
 	// Utility functions
 	//setSegment: sets the current segment to the class segment
-	private function _setSegment($segment) {
+	public function _setSegment($segment) {
 		$this->segment = $segment;
 	}
 	//getSegment: returns the active class segment
-	private function _getSegment() {
+	public function _getSegment() {
 		return $this->segment;
 	}
 	private function _gatherFear(){
@@ -248,6 +248,7 @@ class TextPool extends NLP {
 		$this->_mergeDuplicateWordsOnPosition();
 		$this->_calculateSentimentDensity();
 		$this->_calculateSentimentDistribution();
+		//echo '<pre>'.print_r($this,true).'</pre>';
 		return $this;
 	}
 

@@ -26,7 +26,7 @@ abstract class NLP {
 		$elems = array();
 		//need something here that will go and look up the parts of speech
 		$eng_articles = array('the','a','an');
-		$eng_expletives = array('fuck','bitch','damnit','ass','shit','piss','bastard');
+		$eng_expletives = array('damn','hell');
 		foreach($this->fragmentData as $v) {
 			if(!array_key_exists($v,$elems)) {
 				if(in_array($v,$eng_articles)) {

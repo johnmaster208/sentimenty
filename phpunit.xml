@@ -1,7 +1,7 @@
-<phpunit backupGlobals="true">
+<phpunit backupGlobals="true" bootstrap="vendor/autoload.php">
 	<testsuites>
-		<testsuite name="connect">
-			<file>tests/ConnectTest.php</file>
+		<testsuite name="sentimenty">
+			<directory>tests</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

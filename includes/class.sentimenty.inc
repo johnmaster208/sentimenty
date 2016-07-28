@@ -3,7 +3,7 @@
 require_once('class.service.inc');
 require_once('class.textpool.inc');
 
-class Sentimenty extends Service {
+final class Sentimenty extends Service {
 
 	    public function __construct($request,$origin){
 	    // public function __construct($request){

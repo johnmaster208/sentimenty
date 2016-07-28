@@ -1,5 +1,20 @@
 {
+    "name": "johnmaster208/sentimenty",
+    "description": "API for gathering sentiment out of plain text artifacts",
     "require": {
-        "vendor/autoload": "1.*"
-    }
+        "phpunit/phpunit": "*",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "sentimenty":""
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Richardson",
+            "email": "johnmaster208@gmail.com"
+        }
+    ]
 }

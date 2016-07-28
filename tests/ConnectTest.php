@@ -1,10 +1,12 @@
 <?php
 
+use Guzzle\HTTP\Client;
+
 class Connect {
 		private $serverName = '';
 		public function connectToServer($server=null) {
 			if($server == null) {
-				throw new Exception("Server was not found.");
+				throw new Exception("No Response, Yo!");
 			}
 			$this->serverName = $server;
 			$sock = fsockopen($this->serverName,80);
@@ -17,15 +19,13 @@ class Connect {
 
 
 class ConnectTest extends PHPUnit_Framework_TestCase {
-
 	public function setUp(){}
-
 	public function tearDown(){}
-
+	
 	public function testConnectionIsValid() {
 		//make sure we have a connection object
 		$conn = new Connect();
-		$s = 'sentimenty.homeunix.net';
+		$s = 'sentimenty.herokuapp.com';
 		$this->assertTrue(
 			$conn->connectToServer($s) !== false
 		);	
