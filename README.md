@@ -28,7 +28,7 @@ format
 - Valid values are 'JSON' or 'XML'
 
 ## Demo
-[Demo](http://http://herokuapp.sentimenty.com/)
+[Demo](https://sentimenty.herokuapp.com/)
 
 License
 ----
